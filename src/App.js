@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import "./App.css";
+import CryptoJS from "crypto-js";
 
 class App extends Component {
   state = {
-    opcion: 0, // 1 para cifrar, 2 para descifrar
+    opcion: "encrypt", // Opción "encrypt" para cifrar, "decrypt" para descifrar
     mensaje: "",
     resultado: "",
+    clave: "miClaveSecreta", // Puedes cambiar esto a tu clave secreta
   };
 
   handleInputChange = (event) => {
@@ -18,49 +20,27 @@ class App extends Component {
   };
 
   handleCifradoCesar = () => {
-    const { opcion, mensaje } = this.state;
-    const abecedario = "abcdefghijklmnopqrstuvwxyz";
-    const desplamiento = 5;
-    let text = "";
+    const { opcion, mensaje, clave } = this.state;
 
-    if (opcion === "1") {
-      // Cifrar
-      for (let i = 0; i < mensaje.length; i++) {
-        const caracter = mensaje[i];
-
-        if (/[a-zA-Zñ]/.test(caracter)) {
-          const indice = abecedario.indexOf(caracter);
-          const indiceCifrado = (indice + desplamiento) % abecedario.length;
-          const cifrado = abecedario.charAt(indiceCifrado);
-          text += cifrado;
-        } else {
-          text += caracter;
-        }
-      }
-    } else if (opcion === "2") {
-      // Descifrar
-      for (let i = 0; i < mensaje.length; i++) {
-        const caracter = mensaje[i];
-
-        if (/[a-zA-Zñ]/.test(caracter)) {
-          const indice = abecedario.indexOf(caracter);
-          const indiceDescifrado =
-            (indice - desplamiento + abecedario.length) % abecedario.length;
-          const descifrado = abecedario.charAt(indiceDescifrado);
-          text += descifrado;
-        } else {
-          text += caracter;
-        }
+    if (opcion === "encrypt") {
+      const ciphertext = CryptoJS.AES.encrypt(mensaje, clave).toString();
+      this.setState({ resultado: ciphertext });
+    } else if (opcion === "decrypt") {
+      try {
+        const bytes = CryptoJS.AES.decrypt(mensaje, clave);
+        const originalText = bytes.toString(CryptoJS.enc.Utf8);
+        this.setState({ resultado: originalText });
+      } catch (error) {
+        this.setState({
+          resultado: "Error al descifrar. Clave incorrecta o mensaje no válido.",
+        });
       }
     } else {
       this.setState({
         resultado:
-          "Opción no válida. Debe seleccionar una opcion para cifrar o descifrar.",
+          "Opción no válida. Debe seleccionar una opción para cifrar o descifrar.",
       });
-      return;
     }
-
-    this.setState({ resultado: text });
   };
 
   render() {
@@ -68,7 +48,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1>Cifrado César</h1>
+        <h1>Cifrado CryptoJS</h1>
         <label>
           Opción:
           <select
@@ -76,9 +56,8 @@ class App extends Component {
             value={opcion}
             onChange={this.handleInputChange}
           >
-            <option value="">Seleccione una opcion</option>
-            <option value="1">Cifrar</option>
-            <option value="2">Descifrar</option>
+            <option value="encrypt">Cifrar</option>
+            <option value="decrypt">Descifrar</option>
           </select>
         </label>
 
@@ -87,7 +66,7 @@ class App extends Component {
           Mensaje:
           <textarea
             type="text"
-            name="mensaje" // Add the name attribute
+            name="mensaje"
             value={mensaje}
             onChange={this.handleInputChange}
           />
@@ -97,7 +76,9 @@ class App extends Component {
         <button onClick={this.handleClearText}>Limpiar Texto</button>
 
         <br />
-        <div>Resultado: {resultado}</div>
+        <div>Resultado:
+          <textarea value={resultado}/>
+           </div>
       </div>
     );
   }
