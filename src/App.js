@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import "./App.css";
 
+
 function App() {
-  
   const [message, setMessage] = useState("");
-  const [diametro, setDiametro] = useState();
-  const [lados, setLados] = useState();
+  const [diametro, setDiametro] = useState("");
+  const [lados, setLados] = useState("");
   const [result, setResult] = useState("");
   const [matrixToShow, setMatrixToShow] = useState("");
+  const [modoCifrado, setModoCifrado] = useState(true);
 
   const cifrarTexto = () => {
     if (message && diametro && lados) {
+      const diametroUtilizado = modoCifrado ? diametro : lados;
+      const ladosUtilizados = modoCifrado ? lados : diametro;
+
       const messageArray = message.split(" ").filter((word) => word);
-      const rows = Math.ceil(messageArray.join("").length / lados);
+      const rows = Math.ceil(messageArray.join("").length / ladosUtilizados);
       const encryptedMatrix = [];
 
       for (let i = 0; i < rows; i++) {
@@ -25,14 +29,14 @@ function App() {
       for (const word of messageArray) {
         for (const letter of word) {
           encryptedMatrix[rowIndex][colIndex] = letter;
-          colIndex = (colIndex + 1) % lados;
+          colIndex = (colIndex + 1) % ladosUtilizados;
           rowIndex += colIndex === 0 ? 1 : 0;
         }
       }
 
       const resultArray = [];
 
-      for (let col = 0; col < lados; col++) {
+      for (let col = 0; col < ladosUtilizados; col++) {
         for (let row = 0; row < rows; row++) {
           if (encryptedMatrix[row][col]) {
             resultArray.push(encryptedMatrix[row][col]);
@@ -43,10 +47,8 @@ function App() {
       const result = resultArray.join(" ");
       setResult(result);
 
-      // Establecer la matriz en el estado para mostrar
-      const matrixToShow = encryptedMatrix
-        .map((row) => row.join(" "))
-        .join("\n");
+      // Establece la matriz en el estado para mostrar
+      const matrixToShow = encryptedMatrix.map((row) => row.join(" ")).join("\n");
       setMatrixToShow(matrixToShow);
     } else {
       setResult(
@@ -55,58 +57,17 @@ function App() {
     }
   };
 
-  const descifrarTexto = () => {
-    if (message && diametro && lados) {
-      const messageArray = message.split(" ").filter((word) => word);
-      const rows = Math.ceil(messageArray.join("").length / lados);
-      const encryptedMatrix = [];
-
-      for (let i = 0; i < rows; i++) {
-        encryptedMatrix[i] = [];
-      }
-
-      let rowIndex = 0;
-      let colIndex = 0;
-
-      for (const word of messageArray) {
-        for (const letter of word) {
-          encryptedMatrix[rowIndex][colIndex] = letter;
-          colIndex = (colIndex + 1) % lados;
-          rowIndex += colIndex === 0 ? 1 : 0;
-        }
-      }
-
-      const resultArray = [];
-
-      for (let col = 0; col < lados; col++) {
-        for (let row = 0; row < rows; row++) {
-          if (encryptedMatrix[row][col]) {
-            resultArray.push(encryptedMatrix[row][col]);
-          }
-        }
-      }
-
-      const result = resultArray.join(" ");
-      setResult(result);
-
-      // Establecer la matriz en el estado para mostrar
-      const matrixToShow = encryptedMatrix
-        .map((row) => row.join(" "))
-        .join("\n");
-      setMatrixToShow(matrixToShow);
-    } else {
-      setResult(
-        "Por favor, ingresa un mensaje, un diámetro y el número de lados del semicilindro."
-      );
-    }
+  const toggleModo = () => {
+    // Cambia el modo entre cifrado y descifrado.
+    setModoCifrado((modoAnterior) => !modoAnterior);
   };
 
   return (
     <div className="App2">
       <h1>Escítala React App</h1>
-
+      <h3>James Brian Hernandez Hernandez</h3>
       <div className="input-container">
-        <p>Para su practica realiza este ejemplo, empleando 3 filas con 9 caracteres de longitud</p>
+        <p>Para su práctica realiza este ejemplo, empleando 3 filas con 9 caracteres de longitud</p>
         <p>Con la siguiente frase: <br/><br/>ejemplodelmetododelescitala</p>
         <label className="diameter">Ingresa las filas:</label>
         <input
@@ -130,7 +91,7 @@ function App() {
       </div>
 
       <div className="input-container">
-        <label htmlFor="message">Mensaje a cifrar:</label>
+        <label htmlFor="message">Mensaje:</label>
         <textarea
           id="message"
           placeholder="Ingresa el mensaje"
@@ -138,9 +99,11 @@ function App() {
           onChange={(e) => setMessage(e.target.value)}
         />
         <button className="btnEscitala" onClick={cifrarTexto}>
-          Cifrar
+          {modoCifrado ? "Cifrar" : "Descifrar"}
         </button>
-        
+        <button className="btnToggleModo" onClick={toggleModo}>
+          Cambiar Modo
+        </button>
       </div>
 
       <div className="">
