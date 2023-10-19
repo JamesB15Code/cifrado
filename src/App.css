@@ -1,14 +1,34 @@
 
 
+.Home {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+
+
+
 .App {
   font-family: Arial, sans-serif;
-  max-width: 400px;
-  margin: 5em auto;
-  padding: 20px;
+  max-width: 300px;
+  margin: 3em auto;
+  padding: 10px;
   background-color: #f2f2f2;
   border: 1px solid #ccc;
   border-radius: 5px;
-  text-align: center; 
+  text-align: center;
+}
+
+.App2 {
+  font-family: Arial, sans-serif;
+  max-width: 400px;
+  margin: 3em auto;
+  padding: 10px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
 }
 
 h1 {
@@ -18,22 +38,22 @@ h1 {
 
 label {
   display: block;
-  margin: 10px 0;
+  margin: 8px 0;
   font-weight: bold;
 }
 
 select,
 textarea {
-  width: 100%;
-  padding: 10px;
+  width: 80%;
+  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
 }
 
-button {
+.btnCesar {
   display: block;
-  margin: 20px 0;
+  margin: 10px 0;
   padding: 10px 20px;
   background-color: #007bff;
   color: #fff;
@@ -43,9 +63,39 @@ button {
   transition: background-color 0.3s; /* Smooth transition for button color change */
 }
 
+.btnEscitala {
+  margin: 10px 5px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
 button:hover {
   background-color: #0056b3;
 }
+
+.result {
+  margin-top: 20px;
+  padding: 10px;
+  width: 90%;
+  max-width: 400px;
+  white-space: pre;
+  background-color: white;
+}
+
+.matriz {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 400px;
+  white-space: pre;
+  display: flex;
+  justify-content: center;
+}
+
 
 div.Result {
   margin-top: 20px;
